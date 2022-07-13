@@ -21,6 +21,7 @@ player_img = pygame.image.load("games/space_invaders/player.png")
 player_x = 370
 player_y = 500
 player_x_change = 0
+player_y_change = 0
 
 # Alien
 alien_img = pygame.image.load("games/space_invaders/alien.png")
@@ -95,34 +96,41 @@ while running:
                 player_x_change = 0.3
             if event.key==pygame.K_LEFT:
                 player_x_change = -0.3
+            if event.key==pygame.K_UP:
+                player_y_change = -0.2
+            if event.key==pygame.K_DOWN:
+                player_y_change = 0.2
             if event.key==pygame.K_SPACE:
                 if bullet_state == "ready":
                     bullet_x = player_x + 24
+                    bullet_y = player_y
                     fire_bullet(bullet_x, bullet_y)
                     pygame.mixer.Sound("games/space_invaders/laser.wav").play()
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
                 player_x_change = 0
+            if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                player_y_change = 0
 
     # Player movement
     player_x += player_x_change
+    player_y += player_y_change
     # Player boundries
-    if player_x < 0:
-        player_x = 0
-    elif player_x > 736:
-        player_x = 736
+    if player_x < 0: player_x = 0
+    elif player_x > 736: player_x = 736
+    elif player_y < 0: player_y = 0
+    elif player_y > 530: player_y = 530
 
     player(player_x, player_y)
 
     # Bullet movement
-    if bullet_y == 0:
+    if bullet_y < 0:
         bullet_state = "ready"
-        bullet_y = player_y
-        bullet_x = - 100
 
     if bullet_state == "fire":
-        fire_bullet(bullet_x, bullet_y)
         bullet_y -= bullet_y_change
+        fire_bullet(bullet_x, bullet_y)
+        
 
     # Alien movement
     for i in range(len(alien_x)):
@@ -150,8 +158,8 @@ while running:
         if collision:
             pygame.mixer.Sound("games/space_invaders/explosion.wav").play()
             bullet_state = "ready"
-            bullet_y = 500
-            bullet_x = -100
+            bullet_x = 1000
+            bullet_y = 1000
             score += 1
             alien_x[i] = 10
             alien_y[i] = 10
