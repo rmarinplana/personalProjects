@@ -136,7 +136,7 @@ while running:
     for i in range(len(alien_x)):
         # Game over
         alien_player_distance = ((alien_x[i] - player_x)**2 + (alien_y[i] - player_y)**2)**0.5
-        if alien_player_distance <= 20:
+        if alien_player_distance <= 20 or alien_y[i] > 560:
             is_game_over = True
 
         if is_game_over == True:
